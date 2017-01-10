@@ -2,7 +2,7 @@
 from __future__ import print_function
 import httplib2
 import os
-
+# import bt_check
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -63,18 +63,29 @@ def main():
     spreadsheetId = '17DpK516LjWdcCsMMlm5w5A6HUawn5TS0eeIj7zWiVyk'
 
     # retrieve data
-    rangeName = 'Sheet1!A2:B70'
+    rangeName = 'Sheet1!A2:D70'
     result = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=rangeName).execute()
     values = result.get('values', [])
+
     if not values:
         print('No data found.')
     else:
         print('7th and 8th Graders:')
         for row in values:
-            # Print columns A and B, which correspond to indices 0 and 4.
-            print('%s %s' % (row[0], row[1]))
+            # Print columns A and B, which correspond to indices 0 and 1.
+            print('Checking on: %s %s' % (row[0], row[1]))
 
+            if row[0] == "Asya":
+                result = service.spreadsheets().values().update(
+                    spreadsheetId=spreadsheetId, range='Sheet1!C64',
+                    body="can you see me?").execute()
+                print(result)
+            '''if bt_check.check_bluetooth(row[2]):
+                result = service.spreadsheets().values().update(
+                    spreadsheetId=spreadsheetId, range=str('Sheet1!D'+row),
+                    valueInputOption=RAW, body=body).execute()
+            '''
 
 if __name__ == '__main__':
     main()
